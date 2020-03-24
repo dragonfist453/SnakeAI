@@ -16,19 +16,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class Main extends Application {
+public class Snake extends Application {
     // variable
-    static int speed = 5;
-    static int foodcolor = 0;
-    static int width = 20;
-    static int height = 20;
-    static int foodX = 0;
-    static int foodY = 0;
-    static int cornersize = 25;
-    static List<Corner> snake = new ArrayList<>();
-    static Dir direction = Dir.left;
-    static boolean gameOver = false;
-    static Random rand = new Random();
+    private static int speed = 10;
+    private static int foodcolor = 0;
+    private static int width = 20;
+    private static int height = 20;
+    private static int foodX = 0;
+    private static int score = -1;
+    private static int foodY = 0;
+    private static int cornersize = 25;
+    private static List<Corner> snake = new ArrayList<>();
+    private static Dir direction = Dir.left;
+    private static boolean gameOver = false;
+    private static Random rand = new Random();
 
     public enum Dir {
         left, right, up, down
@@ -38,7 +39,7 @@ public class Main extends Application {
         int x;
         int y;
 
-        public Corner(int x, int y) {
+        private Corner(int x, int y) {
             this.x = x;
             this.y = y;
         }
@@ -76,16 +77,16 @@ public class Main extends Application {
 
             // control
             scene.addEventFilter(KeyEvent.KEY_PRESSED, key -> {
-                if (key.getCode() == KeyCode.W) {
+                if (key.getCode() == KeyCode.W || key.getCode() == KeyCode.UP) {
                     direction = Dir.up;
                 }
-                if (key.getCode() == KeyCode.A) {
+                if (key.getCode() == KeyCode.A || key.getCode() == KeyCode.LEFT) {
                     direction = Dir.left;
                 }
-                if (key.getCode() == KeyCode.S) {
+                if (key.getCode() == KeyCode.S || key.getCode() == KeyCode.DOWN) {
                     direction = Dir.down;
                 }
-                if (key.getCode() == KeyCode.D) {
+                if (key.getCode() == KeyCode.D || key.getCode() == KeyCode.RIGHT) {
                     direction = Dir.right;
                 }
 
@@ -105,12 +106,11 @@ public class Main extends Application {
     }
 
     // tick
-    public static void tick(GraphicsContext gc) {
+    private static void tick(GraphicsContext gc) {
         if (gameOver) {
             gc.setFill(Color.RED);
             gc.setFont(new Font("", 50));
             gc.fillText("GAME OVER", 100, 250);
-            return;
         }
 
         for (int i = snake.size() - 1; i >= 1; i--) {
@@ -156,6 +156,7 @@ public class Main extends Application {
         for (int i = 1; i < snake.size(); i++) {
             if (snake.get(0).x == snake.get(i).x && snake.get(0).y == snake.get(i).y) {
                 gameOver = true;
+                break;
             }
         }
 
@@ -167,7 +168,7 @@ public class Main extends Application {
         // score
         gc.setFill(Color.WHITE);
         gc.setFont(new Font("", 30));
-        gc.fillText("Score: " + (speed - 6), 10, 30);
+        gc.fillText("Score: " + score, 10, 30);
 
         // random foodcolor
         Color cc = Color.WHITE;
@@ -204,7 +205,7 @@ public class Main extends Application {
     }
 
     // food
-    public static void newFood() {
+    private static void newFood() {
         start: while (true) {
             foodX = rand.nextInt(width);
             foodY = rand.nextInt(height);
@@ -215,7 +216,7 @@ public class Main extends Application {
                 }
             }
             foodcolor = rand.nextInt(5);
-            speed++;
+            score++;
             break;
 
         }
