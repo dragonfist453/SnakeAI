@@ -16,11 +16,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SnakeAI" />
+        <module name="SnakeFX" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SnakeAI" target="11" />
+      <module name="SnakeFX" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
