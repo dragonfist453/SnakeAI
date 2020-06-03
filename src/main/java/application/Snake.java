@@ -15,6 +15,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.shape.Line;
+
 
 public class Snake extends Application {
     //Variables required for control of snake and environment
@@ -56,6 +58,7 @@ public class Snake extends Application {
             VBox root = new VBox(); //Vertical box to contain canvas
             Canvas c = new Canvas(width * cornersize, height * cornersize); //Canvas which has the snake game
             GraphicsContext gc = c.getGraphicsContext2D(); //Getting graphics of canvas to make snake on
+
             root.getChildren().add(c); //Adding canvas to vertical box
 
             //Timer handles the snake logic synchronously
@@ -102,7 +105,6 @@ public class Snake extends Application {
             snake.add(new Corner(width / 2, height / 2));
             snake.add(new Corner(width / 2, height / 2));
 
-            //Setting snake scene and show the snake
             primaryStage.setScene(scene);
             primaryStage.setTitle("Snake");
             primaryStage.show();
@@ -132,7 +134,7 @@ public class Snake extends Application {
             case up:
                 //Decrementing y axis moves up
                 snake.get(0).y--;
-                if (snake.get(0).y < 0) {
+                if (snake.get(0).y < 2) {
                     gameOver = true;
                 }
                 break;
@@ -177,10 +179,24 @@ public class Snake extends Application {
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, width * cornersize, height * cornersize);
 
+        //Set borders
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(2);
+        gc.strokeLine(0, 40, 500, 40);
+        gc.setLineWidth(5);
+        gc.strokeLine(0, 40, 0, 500);
+        gc.strokeLine(500, 40, 500, 500);
+        gc.strokeLine(0, 500, 500, 500);
+        gc.setLineWidth(5);
+        gc.setStroke(Color.BLUE);
+        gc.strokeLine(0, 0, 0, 37);
+        gc.strokeLine(500, 0, 500, 37);
+        gc.strokeLine(0, 0, 500, 0);
+
         //Score is displayed in top left
         gc.setFill(Color.WHITE);
         gc.setFont(new Font("", 30));
-        gc.fillText("Score: " + score, 10, 30);
+        gc.fillText("Score: " + score, 200, 30);
 
         //Assign food colour according to what is updated in newfood()
         Color cc = Color.WHITE;
@@ -219,7 +235,7 @@ public class Snake extends Application {
     private static void newFood() {
         start: while (true) {
             foodX = rand.nextInt(width);
-            foodY = rand.nextInt(height);
+            foodY = rand.nextInt(height-2) + 2;
 
             for (Corner c : snake) {
                 if (c.x == foodX && c.y == foodY) {
